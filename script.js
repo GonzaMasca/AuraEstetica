@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const techChips = document.querySelectorAll('.tech-chip');
     const techPanels = document.querySelectorAll('.tech-panel');
 
-    function activateTechPanel(panelId) {
+    function activateTechPanel(panelId, fromClick) {
         techChips.forEach(chip => {
             const isMatch = chip.dataset.panel === panelId;
             chip.classList.toggle('is-active', isMatch);
@@ -262,21 +262,286 @@ document.addEventListener('DOMContentLoaded', function() {
         techPanels.forEach(panel => {
             panel.classList.toggle('is-active', panel.id === `panel-${panelId}`);
         });
+
+        // En móvil: scrollear al panel para que se vea la foto sin tener que bajar
+        if (fromClick && window.innerWidth <= 980) {
+            const stage = document.querySelector('.tech-stage');
+            if (stage) {
+                setTimeout(() => {
+                    stage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 80);
+            }
+        }
     }
 
     techChips.forEach(chip => {
-        // Click o tap: selecciona el panel (funciona en touch y desktop)
-        chip.addEventListener('click', () => activateTechPanel(chip.dataset.panel));
-        // Hover: en desktop, apoyar el cursor también muestra el panel (pedido de la clienta)
-        chip.addEventListener('mouseenter', () => activateTechPanel(chip.dataset.panel));
-        // Teclado: Enter o Espacio activan el chip enfocado
+        // Click o tap: selecciona el panel y scrollea en móvil
+        chip.addEventListener('click', () => activateTechPanel(chip.dataset.panel, true));
+        // Hover: solo en desktop (no scrollea)
+        chip.addEventListener('mouseenter', () => activateTechPanel(chip.dataset.panel, false));
+        // Teclado: Enter o Espacio
         chip.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                activateTechPanel(chip.dataset.panel);
+                activateTechPanel(chip.dataset.panel, true);
             }
         });
     });
 
+    // ========== 13. BOTÓN FLOTANTE DE CONTACTOS (Speed Dial) ==========
+    const fabContainer = document.getElementById('fabContacto');
+    const fabTrigger = document.getElementById('fabTrigger');
+
+    if (fabTrigger && fabContainer) {
+        // Toggle al hacer click
+        fabTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fabContainer.classList.toggle('is-open');
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.fab-container')) {
+                fabContainer.classList.remove('is-open');
+            }
+        });
+
+        // Cerrar al hacer scroll (el usuario se fue a otra parte)
+        let fabScrollTimer;
+        window.addEventListener('scroll', function() {
+            if (fabContainer.classList.contains('is-open')) {
+                clearTimeout(fabScrollTimer);
+                fabScrollTimer = setTimeout(function() {
+                    fabContainer.classList.remove('is-open');
+                }, 800);
+            }
+        });
+    }
+
+    // ========== 14. EFECTO SCROLL: títulos y elementos aparecen gradualmente ==========
+    
+    // Seleccionar los elementos que se van a animar
+    const scrollElements = [];
+    
+    // Títulos de sección (los más notorios)
+    document.querySelectorAll('.section-header h2, .category-title h3, .tech h2, .contact-info h2').forEach(el => {
+        scrollElements.push({ el, type: 'title' });
+    });
+    
+    // Subtítulos y tags
+    document.querySelectorAll('.section-header p, .section-tag, .category-divider').forEach(el => {
+        scrollElements.push({ el, type: 'subtitle' });
+    });
+    
+    // Bloques grandes
+    document.querySelectorAll('.about-text, .about-visual, .tx-carousel, .tech-chips, .tech-stage, .contact-buttons, .contact-map').forEach(el => {
+        scrollElements.push({ el, type: 'block' });
+    });
+
+    // Aplicar estilo inicial: todo transparente
+    scrollElements.forEach(item => {
+        item.el.style.opacity = '0';
+        item.el.style.transform = item.type === 'title' ? 'translateY(30px)' : 'translateY(18px)';
+        item.el.style.transition = 'none'; // sin transición al inicio
+    });
+
+    // Forzar repaint para que el estado inicial se aplique
+    document.body.offsetHeight;
+
+    // Ahora activar transiciones
+    setTimeout(() => {
+        scrollElements.forEach(item => {
+            item.el.style.transition = 'opacity 0.15s ease-out, transform 0.15s ease-out';
+        });
+    }, 50);
+
+    function actualizarScroll() {
+        const windowH = window.innerHeight;
+
+        scrollElements.forEach(item => {
+            const rect = item.el.getBoundingClientRect();
+            const elementCenter = rect.top + rect.height / 2;
+
+            // Zona de activación: desde el 95% del viewport hasta el 40%
+            // (el elemento va apareciendo a medida que sube en la pantalla)
+            const startPoint = windowH * 0.95;  // empieza a aparecer (abajo)
+            const endPoint = windowH * 0.45;    // totalmente visible (centro-alto)
+
+            if (elementCenter >= startPoint) {
+                // Todavía no llegó: invisible
+                item.el.style.opacity = '0';
+                item.el.style.transform = item.type === 'title' ? 'translateY(30px)' : 'translateY(18px)';
+            } else if (elementCenter <= endPoint) {
+                // Ya pasó la zona: totalmente visible
+                item.el.style.opacity = '1';
+                item.el.style.transform = 'translateY(0)';
+            } else {
+                // En la zona de transición: calcular progreso
+                const progress = 1 - (elementCenter - endPoint) / (startPoint - endPoint);
+                const clamped = Math.max(0, Math.min(1, progress));
+                // Curva suave (ease-out)
+                const eased = 1 - Math.pow(1 - clamped, 2.5);
+                
+                item.el.style.opacity = eased.toFixed(3);
+                const yOffset = item.type === 'title' ? (1 - eased) * 30 : (1 - eased) * 18;
+                item.el.style.transform = `translateY(${yOffset.toFixed(1)}px)`;
+            }
+        });
+    }
+
+    // Ejecutar en cada frame de scroll (con requestAnimationFrame para rendimiento)
+    let scrollTicking = false;
+    window.addEventListener('scroll', function() {
+        if (!scrollTicking) {
+            requestAnimationFrame(function() {
+                actualizarScroll();
+                scrollTicking = false;
+            });
+            scrollTicking = true;
+        }
+    });
+
+    // Ejecutar al cargar (por si ya hay elementos visibles)
+    actualizarScroll();
+
+    // Respetar preferencia de reducir movimiento
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        scrollElements.forEach(item => {
+            item.el.style.opacity = '1';
+            item.el.style.transform = 'none';
+            item.el.style.transition = 'none';
+        });
+    }
+
     console.log('✅ AURA | Script cargado correctamente - Menú responsive, scroll suave y funcionalidades activas');
 });
+
+// ====================================================================
+// HERO 1B — "Mármol vivo": inclinación 3D, brillo que barre,
+// marco que se dibuja y botón magnético.
+// Pegá esto al final de tu script.js (dentro o fuera del DOMContentLoaded).
+// ====================================================================
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const hero = document.querySelector('[data-hero-tilt]');
+        if (!hero) return;
+
+        // Solo se desactiva en pantallas táctiles (sin cursor).
+        // Nota: NO se desactiva con "reducir movimiento" porque el efecto
+        // lo controla el propio cursor; solo se atenúa.
+        if (window.matchMedia('(hover: none)').matches) return;
+        const soft = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.5 : 1;
+
+        const magnets = hero.querySelectorAll('[data-hero-magnet]');
+        const MAX_TILT_X = 5 * soft;   // grados (vertical)
+        const MAX_TILT_Y = 6 * soft;   // grados (horizontal)
+        const REACH = 260;      // px de alcance del imán del botón
+        const PULL = 0.14;      // fuerza del imán
+
+        let raf = null, pos = null;
+
+        function apply() {
+            raf = null;
+            if (!pos) return;
+            const { x, y, w, h } = pos;
+            const nx = (x / w) * 2 - 1;
+            const ny = (y / h) * 2 - 1;
+
+            hero.style.setProperty('--hero-tx', (-ny * MAX_TILT_X).toFixed(2) + 'deg');
+            hero.style.setProperty('--hero-ty', (nx * MAX_TILT_Y).toFixed(2) + 'deg');
+            hero.style.setProperty('--hero-sheen', (15 + (x / w) * 70).toFixed(1) + '%');
+
+            magnets.forEach(function (m) {
+                const r = m.getBoundingClientRect();
+                const hr = hero.getBoundingClientRect();
+                const cx = r.left - hr.left + r.width / 2;
+                const cy = r.top - hr.top + r.height / 2;
+                const dx = x - cx, dy = y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const f = dist < REACH ? (1 - dist / REACH) : 0;
+                m.style.transform = 'translate(' + (dx * PULL * f).toFixed(2) + 'px,' +
+                                                  (dy * PULL * f - 3 * f).toFixed(2) + 'px)';
+            });
+        }
+
+        hero.addEventListener('mousemove', function (e) {
+            const r = hero.getBoundingClientRect();
+            pos = { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width, h: r.height };
+            if (!raf) raf = requestAnimationFrame(apply);
+        });
+
+        hero.addEventListener('mouseenter', function () {
+            hero.classList.add('is-hover');
+        });
+
+        hero.addEventListener('mouseleave', function () {
+            hero.classList.remove('is-hover');
+            hero.style.setProperty('--hero-tx', '0deg');
+            hero.style.setProperty('--hero-ty', '0deg');
+            hero.style.setProperty('--hero-sheen', '50%');
+            magnets.forEach(function (m) { m.style.transform = 'translate(0,0)'; });
+        });
+
+        // Destello del botón al pasar el cursor
+        magnets.forEach(function (m) {
+            const sheen = m.querySelector('.btn-hero-sheen');
+            if (!sheen) return;
+            m.addEventListener('mouseenter', function () {
+                sheen.style.animation = 'none';
+                void sheen.offsetWidth;             // reinicia la animación
+                sheen.style.animation = 'aura-sheen 900ms ease-out';
+            });
+        });
+    });
+})();
+
+// ====================================================================
+// CARRUSEL de la sección NOSOTROS — pase automático cada 5 s
+// Crossfade + Ken Burns (zoom lento) + destello dorado. Sin controles.
+// ====================================================================
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const car = document.querySelector('[data-about-carousel]');
+        if (!car) return;
+
+        const slides = Array.from(car.querySelectorAll('.av-slide'));
+        if (slides.length < 2) return;
+
+        const DELAY = 2500;   // milisegundos entre fotos
+        let index = 0;
+        let timer = null;
+
+        // Capa del destello dorado que barre en cada cambio
+        const sweep = document.createElement('div');
+        sweep.className = 'av-sweep';
+        car.appendChild(sweep);
+
+        function replay(el, cls) {
+            el.classList.remove(cls);
+            void el.offsetWidth;      // reinicia la animación CSS
+            el.classList.add(cls);
+        }
+
+        function go(n) {
+            index = (n + slides.length) % slides.length;
+            slides.forEach(function (s, i) {
+                s.classList.remove('is-active');
+                if (i === index) { void s.offsetWidth; s.classList.add('is-active'); }
+            });
+            replay(sweep, 'is-run');
+            restart();
+        }
+
+        function restart() {
+            clearInterval(timer);
+            timer = setInterval(function () { go(index + 1); }, DELAY);
+        }
+
+        // No consumir el temporizador con la pestaña oculta
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) clearInterval(timer); else restart();
+        });
+
+        restart();
+    });
+})();

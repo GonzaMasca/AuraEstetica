@@ -57,24 +57,26 @@
     </nav>
 
     <main>
-        <!-- SECCIÓN HERO / INICIO -->
-        <section id="inicio" class="hero">
-            <div class="container hero-container">
-                <div class="hero-content">
-                    <h1 class="sr-only">AURA — Centro de Estética</h1>
-                    <img src="Imagenes/LogoAura_Negro_Transp.png" alt="AURA Centro de Estética" class="hero-logo">
-                    <div class="hero-divider"></div>
-                    <p class="hero-description">Excelencia en tratamientos corporales y faciales con tecnología de vanguardia</p>
-                    <a href="#contacto" class="btn-hero">Agendá tu turno</a>
-                </div>
-            </div>
-            <a href="#nosotros" class="scroll-cue" aria-label="Desplazarse hacia abajo"><i class="fas fa-chevron-down"></i></a>
-        </section>
+        <!-- SECCIÓN HERO / INICIO — "Mármol vivo" interactivo -->
+        <section id="inicio" class="hero" data-hero-tilt>
+    <div class="hero-plate" data-hero-plate>
+        <div class="hero-sheen"></div>
+        <div class="hero-frame"></div>
+        <div class="hero-content">
+            <h1 class="sr-only">AURA — Centro de Estética</h1>
+            <img src="Imagenes/LogoAura_Negro_Transp.png" alt="AURA Centro de Estética" class="hero-logo">
+            <div class="hero-divider"></div>
+            <p class="hero-description">Excelencia en tratamientos corporales y faciales con tecnología de vanguardia</p>
+            <a href="#contacto" class="btn-hero" data-hero-magnet>Agendá tu turno<span class="btn-hero-sheen"></span></a>
+        </div>
+    </div>
+    <a href="#nosotros" class="scroll-cue" aria-label="Desplazarse hacia abajo"><i class="fas fa-chevron-down"></i></a>
+</section>
 
         <!-- NOSOTROS / ACERCA DE -->
         <section id="nosotros" class="about">
             <div class="container about-container">
-                <div class="about-text">
+                <div class="about-text reveal-left">
                     <span class="section-tag">· Excelencia estética ·</span>
                     <h2>Bienvenidos a Aura Centro de Estética</h2>
                     <p>En Aura creemos que la belleza nace del equilibrio entre el cuidado, el bienestar y la confianza en uno mismo. Nuestro objetivo es brindarte tratamientos estéticos de alta calidad en un espacio diseñado para que te sientas cómodo, relajado y acompañado en cada etapa de tu cuidado personal.</p>
@@ -82,8 +84,16 @@
                     <p>Te invitamos a descubrir una experiencia donde la estética y el bienestar se unen para ayudarte a sentirte mejor por dentro y por fuera.</p>
                     <p class="about-signature">Aura Centro de Estética<br><em>Tu belleza, nuestra inspiración.</em></p>
                 </div>
-                <div class="about-image">
-                    <div class="about-visual">
+                <div class="about-image reveal-right">
+                    <div class="about-visual" data-about-carousel>
+                        <div class="av-slides">
+                            <img class="av-slide is-active" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" src="Imagenes/Depi definitiva.jpeg" alt="Depilación láser definitiva">
+                            <img class="av-slide" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" src="Imagenes/Dermapen con activos.jpeg" alt="Dermapen facial con activos">
+                            <img class="av-slide" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" src="Imagenes/Microblanding cejas.jpeg" alt="Microblading de cejas">
+                            <img class="av-slide" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" src="Imagenes/HOLLYWOOD_PEEL.jpeg" alt="Hollywood Peel">
+                            <img class="av-slide" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" src="Imagenes/LIFTING_PESTAÑAS.jpeg" alt="Lifting de pestañas">
+    
+                        </div>
                         <div class="about-visual-caption">
                             <span class="tag">· Espacio AURA ·</span>
                             <h3>Tu mejor versión empieza aquí</h3>
@@ -97,7 +107,7 @@
         <!-- TRATAMIENTOS DESTACADOS -->
         <section id="tratamientos" class="treatments">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header reveal">
                     <span class="section-tag">· Tratamientos ·</span>
                     <h2>Tratamientos faciales y corporales</h2>
                     <p>Tecnología de última generación para realzar tu belleza natural</p>
@@ -105,14 +115,13 @@
 
                 <!-- CATEGORÍA 1: TRATAMIENTOS FACIALES -->
                 <div class="category-section">
-                    <div class="category-title">
-                        <i class="fas fa-face-smile"></i>
+                    <div class="category-title reveal">
                         <h3>Tratamientos Faciales</h3>
                         <div class="category-divider"></div>
                     </div>
                     <p class="tx-swipe-hint"><i class="fas fa-chevron-left"></i><i class="fas fa-chevron-right" style="margin-left:-6px;"></i> Deslizá para ver más</p>
 
-                    <div class="tx-carousel">
+                    <div class="tx-carousel reveal">
                         <button class="tx-arrow tx-arrow-prev" aria-label="Ver tratamientos anteriores"><i class="fas fa-chevron-left"></i></button>
 
                         <div class="tx-track" data-carousel tabindex="0" aria-label="Carrusel de tratamientos faciales">
@@ -187,14 +196,13 @@
 
                 <!-- CATEGORÍA 2: TRATAMIENTOS CORPORALES -->
                 <div class="category-section">
-                    <div class="category-title">
-                        <i class="fas fa-person-walking"></i>
+                    <div class="category-title reveal">
                         <h3>Tratamientos Corporales</h3>
                         <div class="category-divider"></div>
                     </div>
                     <p class="tx-swipe-hint"><i class="fas fa-chevron-left"></i><i class="fas fa-chevron-right" style="margin-left:-6px;"></i> Deslizá para ver más</p>
 
-                    <div class="tx-carousel">
+                    <div class="tx-carousel reveal">
                         <button class="tx-arrow tx-arrow-prev" aria-label="Ver tratamientos anteriores"><i class="fas fa-chevron-left"></i></button>
 
                         <div class="tx-track" data-carousel tabindex="0" aria-label="Carrusel de tratamientos corporales">
@@ -233,14 +241,13 @@
 
                 <!-- CATEGORÍA 3: DEPILACIÓN Y ESTÉTICA -->
                 <div class="category-section">
-                    <div class="category-title">
-                        <i class="fas fa-hand-peace"></i>
+                    <div class="category-title reveal">
                         <h3>Depilación y Estética</h3>
                         <div class="category-divider"></div>
                     </div>
                     <p class="tx-swipe-hint"><i class="fas fa-chevron-left"></i><i class="fas fa-chevron-right" style="margin-left:-6px;"></i> Deslizá para ver más</p>
 
-                    <div class="tx-carousel">
+                    <div class="tx-carousel reveal">
                         <button class="tx-arrow tx-arrow-prev" aria-label="Ver tratamientos anteriores"><i class="fas fa-chevron-left"></i></button>
 
                         <div class="tx-track" data-carousel tabindex="0" aria-label="Carrusel de depilación y estética">
@@ -310,14 +317,14 @@
         <!-- TECNOLOGÍA DE VANGUARDIA -->
         <section id="tecnologia" class="tech">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header reveal">
                     <span class="section-tag">· Equipos de última generación ·</span>
                     <h2>Tecnología de vanguardia</h2>
                     <p>Somos el único centro habilitado para múltiples tecnologías premium</p>
                 </div>
 
                 <!-- CHIPS: uno por tecnología -->
-                <div class="tech-chips" role="tablist" aria-label="Tecnologías disponibles">
+                <div class="tech-chips reveal" role="tablist" aria-label="Tecnologías disponibles">
                     <button class="tech-chip is-active" role="tab" aria-selected="true"  aria-controls="panel-hifu"       data-panel="hifu">HIFU 12D</button>
                     <button class="tech-chip"           role="tab" aria-selected="false" aria-controls="panel-emsculpt"   data-panel="emsculpt">EMSCULPT</button>
                     <button class="tech-chip"           role="tab" aria-selected="false" aria-controls="panel-liposonix"  data-panel="liposonix">Liposonix 18 Pro</button>
@@ -329,7 +336,7 @@
                 </div>
 
                 <!-- ESCENARIO: panel que cambia según el chip activo -->
-                <div class="tech-stage" aria-live="polite">
+                <div class="tech-stage reveal" aria-live="polite">
 
                     <div class="tech-panel is-active" id="panel-hifu">
                         <div class="tech-panel-visual" style="background-image:url('Imagenes/HIFU12D.jpeg')"></div>
@@ -402,7 +409,7 @@
                     </div>
 
                     <div class="tech-panel" id="panel-picolaser">
-                        <div class="tech-panel-visual" style="background-image:url('Imagenes/ND-YAG\ PICOLASER.jpeg')"></div>
+                        <div class="tech-panel-visual" style="background-image:url('Imagenes/ND-YAG_PICOLASER.jpeg')"></div>
                         <div class="tech-panel-info">
                             <span class="tech-panel-tag">Eliminación de Manchas</span>
                             <h3 class="tech-panel-name">ND-YAG Picolaser</h3>
@@ -418,7 +425,7 @@
         <!-- SECCIÓN DE CONTACTO CON MAPA INTERACTIVO -->
         <section id="contacto" class="contact">
             <div class="container contact-container">
-                <div class="contact-info">
+                <div class="contact-info reveal-left">
                     <span class="section-tag">· Contacto ·</span>
                     <h2>Conectá con AURA</h2>
                     <p>Reservá tu consulta o escribinos por cualquier duda. Estamos para ayudarte a potenciar tu mejor versión.</p>
@@ -441,7 +448,7 @@
                         <p><i class="fas fa-clock"></i> Lun a Vie 9-20h | Sáb 9-14h</p>
                     </div>
                 </div>
-                <div class="contact-map">
+                <div class="contact-map reveal-right">
                     <div class="map-container">
                         <iframe
                             src="https://maps.google.com/maps?q=-33.0323714,-68.876018&z=16&output=embed"
@@ -479,6 +486,32 @@
             </div>
         </div>
     </footer>
+
+    <!-- Botón flotante de contactos -->
+    <div class="fab-container" id="fabContacto">
+        <div class="fab-options" id="fabOptions">
+            <a href="https://wa.me/5492615901647?text=Hola%20AURA%2C%20quiero%20agendar%20un%20turno" target="_blank" rel="noopener" class="fab-option fab-whatsapp" aria-label="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+                <span class="fab-label">WhatsApp</span>
+            </a>
+            <a href="https://www.instagram.com/___auraestetica/" target="_blank" rel="noopener" class="fab-option fab-instagram" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+                <span class="fab-label">Instagram</span>
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=auraestetica03@gmail.com" target="_blank" rel="noopener" class="fab-option fab-email" aria-label="Email">
+                <i class="fas fa-envelope"></i>
+                <span class="fab-label">Email</span>
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=auracurriculum@gmail.com&su=Postulaci%C3%B3n%20-%20Trabaj%C3%A1%20con%20nosotros&body=Hola%20AURA%2C%20les%20env%C3%ADo%20mi%20CV%20para%20postularme%20a%20trabajar%20con%20ustedes." target="_blank" rel="noopener" class="fab-option fab-cv" aria-label="Enviar CV">
+                <i class="fas fa-briefcase"></i>
+                <span class="fab-label">Enviá tu CV</span>
+            </a>
+        </div>
+        <button class="fab-trigger" id="fabTrigger" aria-label="Contacto">
+            <i class="fab-icon-open fas fa-comment-dots"></i>
+            <i class="fab-icon-close fas fa-times"></i>
+        </button>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
